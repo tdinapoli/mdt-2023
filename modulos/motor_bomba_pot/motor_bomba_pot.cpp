@@ -45,8 +45,14 @@ void potBombaSubirPocoDutyCycle(){
     cs = 0;
     spi.write(0x11); // mado command byte 00 01 00 11
                      // pagina 18 datasheet
-    spi.write(pwm_level + _INCREMENTO_CHICO_);
-    pwm_level = pwm_level + _INCREMENTO_CHICO_;
+    int nuevo_pwm = pwm_level + _INCREMENTO_CHICO_
+    if (chequearRestricciones(nuevo_pwm)){
+        spi.write(nuevo_pwm);
+        pwm_level = nuevo_pwm;
+    }
+    else {
+        motor_bomba_pot_pc_serial.printf("El potenciómetro ya está al máximo");
+    }
     cs = 1;
 }
 
@@ -54,8 +60,14 @@ void potBombaBajarPocoDutyCycle(){
     cs = 0;
     spi.write(0x11); // mado command byte 00 01 00 11
                      // pagina 18 datasheet
-    spi.write(pwm_level - _INCREMENTO_CHICO_);
-    pwm_level = pwm_level - _INCREMENTO_CHICO_;
+    int nuevo_pwm = pwm_level - _INCREMENTO_CHICO_
+    if (chequearRestricciones(nuevo_pwm)){
+        spi.write(nuevo_pwm);
+        pwm_level = nuevo_pwm;
+    }
+    else {
+        motor_bomba_pot_pc_serial.printf("El potenciómetro ya está al mínimo");
+    }
     cs = 1;
 }
 
@@ -63,8 +75,14 @@ void potBombaSubirMuchoDutyCycle(){
     cs = 0;
     spi.write(0x11); // mado command byte 00 01 00 11
                      // pagina 18 datasheet
-    spi.write(pwm_level + _INCREMENTO_GRANDE_);
-    pwm_level = pwm_level + _INCREMENTO_GRANDE_;
+    int nuevo_pwm = pwm_level + _INCREMENTO_GRANDE_;
+    if (chequearRestricciones(nuevo_pwm)){
+        spi.write(nuevo_pwm);
+        pwm_level = nuevo_pwm;
+    }
+    else {
+        motor_bomba_pot_pc_serial.printf("El potenciómetro ya está al máximo");
+    }
     cs = 1;
 }
 
@@ -72,7 +90,17 @@ void potBombaBajarMuchoDutyCycle(){
     cs = 0;
     spi.write(0x11); // mado command byte 00 01 00 11
                      // pagina 18 datasheet
-    spi.write(pwm_level - _INCREMENTO_GRANDE_);
-    pwm_level = pwm_level - _INCREMENTO_GRANDE_;
+    int nuevo_pwm = pwm_level - _INCREMENTO_GRANDE_;
+    if (chequearRestricciones(nuevo_pwm)){
+        spi.write(pwm_level - _INCREMENTO_GRANDE_);
+        pwm_level = pwm_level - _INCREMENTO_GRANDE_;
+    }
+    else {
+        motor_bomba_pot_pc_serial.printf("El potenciómetro ya está al mínimo");
+    }
     cs = 1;
+}
+
+static bool chequearRestricciones(int level){
+    return (level < 255 && level > 0)
 }
