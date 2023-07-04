@@ -1,0 +1,9 @@
+
+librería
+problema de bloqueo causado por la librería del HX711
+librería original:
+https://github.com/bogde/HX711
+
+reemplazo por:
+https://os.mbed.com/users/hudakz/code/HX711/
+
