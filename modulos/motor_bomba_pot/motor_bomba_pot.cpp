@@ -101,6 +101,13 @@ void potBombaBajarMuchoDutyCycle(){
     cs = 1;
 }
 
+void setPotResistance(int level){
+    cs = 0;
+    spi.write(0x11);
+    spi.write(level);
+    cs = 1;
+}
+
 static bool chequearRestricciones(int level){
-    return (level < 255 && level > 0)
+    return (level < 255 && level > 0);
 }
