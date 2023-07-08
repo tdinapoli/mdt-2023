@@ -2,7 +2,7 @@
 #include "pc_serial_com.h"
 #include "valvula.h"
 #include "arm_book_lib.h"
-#include "motor_bomba.h"
+#include "motor_bomba_pot.h"
 #include "presion_antes.h"
 #include "presion_despues.h"
 #include "alarmas.h"
@@ -54,16 +54,16 @@ static void comSetBombaDutyCycle(){
         delay(50);
         
         if (caracterRecibido == 'u'){
-            subirPocoBombaDutyCycle();
+            potBombaSubirPocoDutyCycle();
             }
         else if (caracterRecibido == 'U'){
-            subirMuchoBombaDutyCycle();
+            potBombaSubirMuchoDutyCycle();
             }
         else if (caracterRecibido == 'd') {
-            bajarPocoBombaDutyCycle();
+            potBombaBajarPocoDutyCycle();
             }
         else if (caracterRecibido == 'D') {
-            bajarMuchoBombaDutyCycle();
+            potBombaBajarMuchoDutyCycle();
             }
         else if (caracterRecibido == 'q') {
             usbPort_pc_serial_com.printf("Volviendo al menu principal... \n");
@@ -87,7 +87,7 @@ static void comComandosDisponibles(){
     }
 
 static void comEstadoComponentes(){
-    float duty_cycle_v = readBombaDutyCycle(); //velocidad con la que funciona la bomba
+    float duty_cycle_v = readPotBombaDutyCycle(); //velocidad con la que funciona la bomba
     float presion_antes_v = sensorPresionAntesRead(); //Lee el input analógico del sensor de presion
     float presion_despues_v = sensorPresionDespuesRead(); //Lee el input analógico del sensor de presion
     estadoValvula_t estado_v = estadoValvulaRead(); //Lee si la valvula esta abierta o cerrada
