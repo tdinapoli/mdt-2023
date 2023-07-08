@@ -1,4 +1,5 @@
 #include "mbed.h"
+#include "motor_bomba_pot.h"
 
 // define los pines a utilizar para el potenciometro
 // por ahora pongo cualquiera que diga SPI_XXXX en
@@ -50,6 +51,7 @@ void potBombaSubirPocoDutyCycle(){
     if (chequearRestricciones(nuevo_pwm)){
         spi.write(nuevo_pwm);
         pwm_level = nuevo_pwm;
+        motor_bomba_pot_pc_serial.printf("Duty Cycle: %.2f \n", readPotBombaDutyCycle());
     }
     else {
         motor_bomba_pot_pc_serial.printf("El potenciómetro ya está al máximo");
@@ -65,6 +67,7 @@ void potBombaBajarPocoDutyCycle(){
     if (chequearRestricciones(nuevo_pwm)){
         spi.write(nuevo_pwm);
         pwm_level = nuevo_pwm;
+        motor_bomba_pot_pc_serial.printf("Duty Cycle: %.2f \n", readPotBombaDutyCycle());
     }
     else {
         motor_bomba_pot_pc_serial.printf("El potenciómetro ya está al mínimo");
@@ -80,6 +83,7 @@ void potBombaSubirMuchoDutyCycle(){
     if (chequearRestricciones(nuevo_pwm)){
         spi.write(nuevo_pwm);
         pwm_level = nuevo_pwm;
+        motor_bomba_pot_pc_serial.printf("Duty Cycle: %.2f \n", readPotBombaDutyCycle());
     }
     else {
         motor_bomba_pot_pc_serial.printf("El potenciómetro ya está al máximo");
@@ -93,8 +97,9 @@ void potBombaBajarMuchoDutyCycle(){
                      // pagina 18 datasheet
     int nuevo_pwm = pwm_level - _INCREMENTO_GRANDE_;
     if (chequearRestricciones(nuevo_pwm)){
-        spi.write(pwm_level - _INCREMENTO_GRANDE_);
-        pwm_level = pwm_level - _INCREMENTO_GRANDE_;
+        spi.write(nuevo_pwm);
+        pwm_level = nuevo_pwm;
+        motor_bomba_pot_pc_serial.printf("Duty Cycle: %.2f \n", readPotBombaDutyCycle());
     }
     else {
         motor_bomba_pot_pc_serial.printf("El potenciómetro ya está al mínimo");
@@ -107,6 +112,11 @@ void setPotResistance(int level){
     spi.write(0x11);
     spi.write(level);
     cs = 1;
+}
+
+float readPotBombaDutyCycle(){
+    float percent = (float)pwm_level/255;
+    return percent;
 }
 
 static bool chequearRestricciones(int level){

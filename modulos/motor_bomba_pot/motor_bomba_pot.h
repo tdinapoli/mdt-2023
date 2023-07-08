@@ -6,6 +6,7 @@ void potBombaSubirPocoDutyCycle();
 void potBombaBajarPocoDutyCycle();
 void potBombaSubirMuchoDutyCycle();
 void potBombaBajarMuchoDutyCycle();
-float setPotResistance(int level);
+float readPotBombaDutyCycle();
+void setPotResistance(int level);
 
 #endif //_MOTOR_BOMBA_POT_H_
