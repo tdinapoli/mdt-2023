@@ -2,7 +2,7 @@
 
 #include "pc_serial_com.h"
 #include "valvula.h"
-#include "motor_bomba.h"
+#include "motor_bomba_pot.h"
 #include "alarmas.h"
 #include "celda_carga.h"
 #include "control_sensores.h"
@@ -14,7 +14,7 @@ static Serial usbPort_sistema(USBTX, USBRX);
 void sistemaInit(){
     usbPort_sistema.printf("El programa está corriendo!\n");
     valvulaInit();
-    motorBombaInit();
+    motorBombaPotInit();
     pcSerialComInit();
     celdaCargaInit();
     controlSensoresInit();
