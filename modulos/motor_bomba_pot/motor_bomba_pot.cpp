@@ -4,10 +4,10 @@
 // por ahora pongo cualquiera que diga SPI_XXXX en
 // https://os.mbed.com/platforms/ST-Nucleo-F429ZI/
 // después hay que cambiarlos por alguno q convenga más
-#define _CS_ SPI1_CS // PA_15
-#define _MOSI_ SPI1_MOSI // PB_5
-#define _MISO_ SPI1_MISO // PB_4
-#define _SCLK_ SPI1_SCK // PA_4
+#define _CS_ PA_4 // PA_4 SPI1_CS
+#define _MOSI_ PB_5 // PB_5 SPI1_MOSI
+#define _MISO_ PB_4 // PB_4 SPI1_MISO
+#define _SCLK_ PB_3 // PB_3 SPI1_SCK
 #define _INCREMENTO_CHICO_ 1
 #define _INCREMENTO_GRANDE_ 10
 
@@ -17,6 +17,7 @@ DigitalOut cs(_CS_);
 Serial motor_bomba_pot_pc_serial(USBTX, USBRX);
 
 int pwm_level = 0; // max 255
+static bool chequearRestricciones(int);
 
 void motorBombaPotInit(){
     // Chip must be deselected
@@ -35,7 +36,7 @@ void motorBombaPotInit(){
  
     // Send a dummy byte to receive the contents of the WHOAMI register
     int whoami = spi.write(0x00);
-    motor_bomba_pot_pc_serial.printf("WHOAMI register = 0x%X\n", whoami);
+    // motor_bomba_pot_pc_serial.printf("WHOAMI register = 0x%X\n", whoami);
  
     // Deselect the device
     cs = 1;
@@ -45,7 +46,7 @@ void potBombaSubirPocoDutyCycle(){
     cs = 0;
     spi.write(0x11); // mado command byte 00 01 00 11
                      // pagina 18 datasheet
-    int nuevo_pwm = pwm_level + _INCREMENTO_CHICO_
+    int nuevo_pwm = pwm_level + _INCREMENTO_CHICO_;
     if (chequearRestricciones(nuevo_pwm)){
         spi.write(nuevo_pwm);
         pwm_level = nuevo_pwm;
@@ -60,7 +61,7 @@ void potBombaBajarPocoDutyCycle(){
     cs = 0;
     spi.write(0x11); // mado command byte 00 01 00 11
                      // pagina 18 datasheet
-    int nuevo_pwm = pwm_level - _INCREMENTO_CHICO_
+    int nuevo_pwm = pwm_level - _INCREMENTO_CHICO_;
     if (chequearRestricciones(nuevo_pwm)){
         spi.write(nuevo_pwm);
         pwm_level = nuevo_pwm;
