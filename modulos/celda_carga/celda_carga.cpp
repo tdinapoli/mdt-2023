@@ -14,10 +14,10 @@ static Serial usbPort_pc_celda(USBTX, USBRX);
 
 void celdaCargaInit(){
     if (celda.isReady()){
-        usbPort_pc_celda.printf("La celda está lista");
+        usbPort_pc_celda.printf("La celda está lista\n");
     }
     else {
-        usbPort_pc_celda.printf("La celda NO está lista");
+        usbPort_pc_celda.printf("La celda NO está lista\n");
     }
     
     }

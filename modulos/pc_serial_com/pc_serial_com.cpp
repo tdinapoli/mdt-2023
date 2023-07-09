@@ -1,6 +1,6 @@
 #include "mbed.h"
 #include "pc_serial_com.h"
-#include "valvula.h"
+#include "valvula_stepper.h"
 #include "arm_book_lib.h"
 #include "motor_bomba_pot.h"
 #include "presion_antes.h"
@@ -35,8 +35,8 @@ void pcSerialComUpdate(){
         switch( caracterRecibido ){
             case 'c': comComandosDisponibles(); break; //muestra comandos disponibles
             case 'e': comEstadoComponentes(); break; //muestra el estado de los componentes
-            case 'v': valvulaCerrar(); break; //cierra la valvula
-            case 'V': valvulaAbrir(); break; //abre la valvula
+            case 'v': valvulaStepperCerrar(); break; //cierra la valvula
+            case 'V': valvulaStepperAbrir(); break; //abre la valvula
             case 'b': comSetBombaDutyCycle(); break; //te permite setear el duty cycle de la bomba
             default: usbPort_pc_serial_com.printf("comando no reconocido\n"); break; //si se escribe algo distinto a los comandos anteriores, contesta q no entiende
             }
@@ -90,7 +90,7 @@ static void comEstadoComponentes(){
     float duty_cycle_v = readPotBombaDutyCycle(); //velocidad con la que funciona la bomba
     float presion_antes_v = sensorPresionAntesRead(); //Lee el input analógico del sensor de presion
     float presion_despues_v = sensorPresionDespuesRead(); //Lee el input analógico del sensor de presion
-    estadoValvula_t estado_v = estadoValvulaRead(); //Lee si la valvula esta abierta o cerrada
+    estadoValvulaStepper_t estado_v = estadoValvulaStepperRead(); //Lee si la valvula esta abierta o cerrada
     bool alarma_roja_v = alarmasEstadoRojo();
     bool alarma_verde_v = alarmasEstadoVerde();
     bool alarma_azul_v = alarmasEstadoAzul();

@@ -2,7 +2,7 @@
 #include "mbed.h"
 #include "presion_antes.h"
 #include "presion_despues.h"
-#include "motor_bomba.h"
+#include "motor_bomba_pot.h"
 #include "control_sensores.h"
 #include "alarmas.h"
 #include "celda_carga.h"
@@ -41,7 +41,7 @@ void controlSensoresUpdate(){
 static void alarmaPresionAntes(float control_presion_antes_valor){
     //chequea si el valor de presion es muy alto, y si lo es apaga la bomba
     if ( control_presion_antes_valor > _PRESION_ANTES_PELIGRO_ ){
-        setBombaDutyCycle(0.0);
+        setPotResistance(255);
         if ( !alarmasEstadoRojo() ){
             alarmasCambiarRojo();
             }
@@ -56,7 +56,7 @@ static void alarmaPresionAntes(float control_presion_antes_valor){
 static void alarmaPresionDespues(float control_presion_despues_valor){
     //chequea si el valor de presion es muy alto, y si lo es apaga la bomba
     if ( control_presion_despues_valor > _PRESION_DESPUES_PELIGRO_ ){
-        setBombaDutyCycle(0.0);
+        setPotResistance(255);
         if ( !alarmasEstadoVerde() ){
             alarmasCambiarVerde();
             }
@@ -71,7 +71,7 @@ static void alarmaPresionDespues(float control_presion_despues_valor){
 static void alarmaCeldaCarga(float control_celda_carga_valor){
     //chequea si el valor de carga es muy bajo, y si lo es apaga la bomba
     if ( control_celda_carga_valor < _CELDA_CARGA_PELIGRO_){
-        setBombaDutyCycle(0.0);
+        setPotResistance(255);
         if ( !alarmasEstadoAzul() ){
             alarmasCambiarAzul();
             }

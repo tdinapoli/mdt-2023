@@ -17,7 +17,7 @@ DigitalOut cs(_CS_);
 
 Serial motor_bomba_pot_pc_serial(USBTX, USBRX);
 
-int pwm_level = 0; // max 255
+int pwm_level = 255; // max 255
 static bool chequearRestricciones(int);
 
 void motorBombaPotInit(){
@@ -38,12 +38,15 @@ void motorBombaPotInit(){
     // Send a dummy byte to receive the contents of the WHOAMI register
     int whoami = spi.write(0x00);
     // motor_bomba_pot_pc_serial.printf("WHOAMI register = 0x%X\n", whoami);
+
+    // inicializa el potenciómetro en el maximo 
+    setPotResistance(pwm_level);
  
     // Deselect the device
     cs = 1;
 }
 
-void potBombaSubirPocoDutyCycle(){
+void potBombaBajarPocoDutyCycle(){
     cs = 0;
     spi.write(0x11); // mado command byte 00 01 00 11
                      // pagina 18 datasheet
@@ -54,12 +57,12 @@ void potBombaSubirPocoDutyCycle(){
         motor_bomba_pot_pc_serial.printf("Duty Cycle: %.2f \n", readPotBombaDutyCycle());
     }
     else {
-        motor_bomba_pot_pc_serial.printf("El potenciómetro ya está al máximo");
+        motor_bomba_pot_pc_serial.printf("El potenciómetro ya está al mínimo\n");
     }
     cs = 1;
 }
 
-void potBombaBajarPocoDutyCycle(){
+void potBombaSubirPocoDutyCycle(){
     cs = 0;
     spi.write(0x11); // mado command byte 00 01 00 11
                      // pagina 18 datasheet
@@ -70,12 +73,12 @@ void potBombaBajarPocoDutyCycle(){
         motor_bomba_pot_pc_serial.printf("Duty Cycle: %.2f \n", readPotBombaDutyCycle());
     }
     else {
-        motor_bomba_pot_pc_serial.printf("El potenciómetro ya está al mínimo");
+        motor_bomba_pot_pc_serial.printf("El potenciómetro ya está al máximo\n");
     }
     cs = 1;
 }
 
-void potBombaSubirMuchoDutyCycle(){
+void potBombaBajarMuchoDutyCycle(){
     cs = 0;
     spi.write(0x11); // mado command byte 00 01 00 11
                      // pagina 18 datasheet
@@ -86,12 +89,12 @@ void potBombaSubirMuchoDutyCycle(){
         motor_bomba_pot_pc_serial.printf("Duty Cycle: %.2f \n", readPotBombaDutyCycle());
     }
     else {
-        motor_bomba_pot_pc_serial.printf("El potenciómetro ya está al máximo");
+        motor_bomba_pot_pc_serial.printf("El potenciómetro ya está al mínimo\n");
     }
     cs = 1;
 }
 
-void potBombaBajarMuchoDutyCycle(){
+void potBombaSubirMuchoDutyCycle(){
     cs = 0;
     spi.write(0x11); // mado command byte 00 01 00 11
                      // pagina 18 datasheet
@@ -102,7 +105,7 @@ void potBombaBajarMuchoDutyCycle(){
         motor_bomba_pot_pc_serial.printf("Duty Cycle: %.2f \n", readPotBombaDutyCycle());
     }
     else {
-        motor_bomba_pot_pc_serial.printf("El potenciómetro ya está al mínimo");
+        motor_bomba_pot_pc_serial.printf("El potenciómetro ya está al máximo\n");
     }
     cs = 1;
 }
@@ -115,7 +118,7 @@ void setPotResistance(int level){
 }
 
 float readPotBombaDutyCycle(){
-    float percent = (float)pwm_level/255;
+    float percent = 1 - (float)pwm_level/255; // supongo que mientras más alto el valor del pote menor el duty cycle
     return percent;
 }
 
