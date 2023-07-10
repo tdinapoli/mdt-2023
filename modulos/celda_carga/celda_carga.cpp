@@ -5,7 +5,7 @@
 #define _ANALOG_VOLTAGE_ 12
 #define _CLOCK_PIN_ D8
 #define _DOUT_PINT_ D9
-#define _GAIN_ 1
+#define _GAIN_ 128
 
 HX711 celda(_ANALOG_VOLTAGE_, _CLOCK_PIN_, _DOUT_PINT_, _GAIN_);
 
@@ -14,10 +14,10 @@ static Serial usbPort_pc_celda(USBTX, USBRX);
 
 void celdaCargaInit(){
     if (celda.isReady()){
-        usbPort_pc_celda.printf("La celda está lista\n");
+        usbPort_pc_celda.printf("La celda está lista con ganancia %d\n", _GAIN_);
     }
     else {
-        usbPort_pc_celda.printf("La celda NO está lista\n");
+        usbPort_pc_celda.printf("La celda NO está lista con ganancia %d\n", _GAIN_);
     }
     
     }

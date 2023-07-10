@@ -9,7 +9,7 @@
 #define _IN_4_ D7
 
 #define _IN_BETWEEN_STEPS_DELAY_ 10
-#define _STEPS_TO_OPEN_ 200 
+#define _STEPS_TO_OPEN_ 50 
 
 DigitalOut motor_pin_1(_IN_1_);
 DigitalOut motor_pin_2(_IN_2_);
