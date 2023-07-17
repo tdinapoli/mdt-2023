@@ -6,6 +6,8 @@ typedef enum{
     CERRADA
     } estadoValvulaStepper_t;
 
+void fourStepsRight();
+void fourStepsLeft();
 void valvulaStepperInit();
 void valvulaStepperAbrir();
 void valvulaStepperCerrar();
