@@ -19,8 +19,6 @@ DigitalOut motor_pin_4(_IN_4_);
 estadoValvulaStepper_t estadoValvula;
 
 static Serial valvula_stepper_serial(USBTX, USBRX);
-static void fourStepsRight(void);
-static void fourStepsLeft(void);
 
 void valvulaStepperInit(){
     estadoValvula = CERRADA;
@@ -66,7 +64,7 @@ estadoValvulaStepper_t estadoValvulaStepperRead(){
 // esta funcion hace 4 pasos del stepper
 // esta definida así para no tener que manejar el orden de los pasos
 // que es más complejo. 
-static void fourStepsRight(){
+void fourStepsRight(){
     motor_pin_1 = 1;
     motor_pin_2 = 0;
     motor_pin_3 = 1;
@@ -89,7 +87,7 @@ static void fourStepsRight(){
     delay(_IN_BETWEEN_STEPS_DELAY_);
 }
 
-static void fourStepsLeft(){
+void fourStepsLeft(){
     motor_pin_1 = 1;
     motor_pin_2 = 0;
     motor_pin_3 = 0;
