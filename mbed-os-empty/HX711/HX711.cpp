@@ -109,5 +109,5 @@ float HX711::toVolt(float val)
  */
 float HX711::read()
 {
-    return(toVolt(_toFloat(readInt())) * 1000 - _drift);
+    return(toVolt(_toFloat(readInt())) * 450e0 - _drift);
 }

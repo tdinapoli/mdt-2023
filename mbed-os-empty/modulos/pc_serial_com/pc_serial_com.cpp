@@ -1,12 +1,16 @@
 #include "mbed.h"
 #include "pc_serial_com.h"
-#include "valvula_stepper.h"
+//#include "valvula_stepper.h"
 #include "arm_book_lib.h"
 #include "motor_bomba_pot.h"
 #include "presion_antes.h"
 #include "presion_despues.h"
 #include "alarmas.h"
 #include "celda_carga.h"
+#include "sistema.h"
+#include "valvula.h"
+
+extern StepperMotor valveMotor;
 
 static void comComandosDisponibles();
 
@@ -35,11 +39,11 @@ void pcSerialComUpdate(){
         switch( caracterRecibido ){
             case 'c': comComandosDisponibles(); break; //muestra comandos disponibles
             case 'e': comEstadoComponentes(); break; //muestra el estado de los componentes
-            case 'v': valvulaStepperCerrar(); break; //cierra la valvula
-            case 'V': valvulaStepperAbrir(); break; //abre la valvula
+            case 'v': valveMotor.close(); break; //cierra la valvula
+            case 'V': valveMotor.open(); break; //abre la valvula
             case 'b': comSetBombaDutyCycle(); break; //te permite setear el duty cycle de la bomba
-            case 'r': fourStepsRight(); break;
-            case 'l': fourStepsLeft(); break;
+            case 'r': valveMotor.oneStepRight(); break;
+            case 'l': valveMotor.oneStepLeft(); break;
             default: usbPort_pc_serial_com.printf("comando no reconocido\n"); break; //si se escribe algo distinto a los comandos anteriores, contesta q no entiende
             }
         }
@@ -86,13 +90,16 @@ static void comComandosDisponibles(){
     usbPort_pc_serial_com.printf("v: cerrar valvula\n");
     usbPort_pc_serial_com.printf("V: abrir valvula\n");
     usbPort_pc_serial_com.printf("b: settear la velocidad de la bomba\n");
+    usbPort_pc_serial_com.printf("r: mover el motor de la valvula un paso a la derecha");
+    usbPort_pc_serial_com.printf("l: mover el motor de la valvula un paso a la izquierda");
     }
 
 static void comEstadoComponentes(){
     float duty_cycle_v = readPotBombaDutyCycle(); //velocidad con la que funciona la bomba
     float presion_antes_v = sensorPresionAntesRead(); //Lee el input analógico del sensor de presion
     float presion_despues_v = sensorPresionDespuesRead(); //Lee el input analógico del sensor de presion
-    estadoValvulaStepper_t estado_v = estadoValvulaStepperRead(); //Lee si la valvula esta abierta o cerrada
+    //estadoValvulaStepper_t estado_v = estadoValvulaStepperRead(); //Lee si la valvula esta abierta o cerrada
+    valveState_t state_v = valveMotor.valveState;
     bool alarma_roja_v = alarmasEstadoRojo();
     bool alarma_verde_v = alarmasEstadoVerde();
     bool alarma_azul_v = alarmasEstadoAzul();
@@ -101,7 +108,7 @@ static void comEstadoComponentes(){
     usbPort_pc_serial_com.printf("El motor de la bomba esta al %f \n", duty_cycle_v);
     usbPort_pc_serial_com.printf("La presion antes de la bomba es de %f \n", presion_antes_v);
     usbPort_pc_serial_com.printf("La presion despues de la bomba es de %f \n", presion_despues_v);
-    usbPort_pc_serial_com.printf("Estado de la valvula %d \n", (int)estado_v);
+    usbPort_pc_serial_com.printf("Estado de la valvula %d \n", (int)state_v);
     usbPort_pc_serial_com.printf("Alarma roja %d \n", alarma_roja_v);
     usbPort_pc_serial_com.printf("Alarma verde %d \n", alarma_verde_v);
     usbPort_pc_serial_com.printf("Alarma azul %d \n", alarma_azul_v);
