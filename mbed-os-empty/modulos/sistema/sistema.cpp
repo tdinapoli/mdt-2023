@@ -9,6 +9,7 @@
 #include "sistema.h"
 #include "arm_book_lib.h"
 #include "valvula.h"
+#include "pid_controller.h"
 
 static Serial usbPort_sistema(USBTX, USBRX);
 
@@ -22,12 +23,14 @@ void sistemaInit(){
     celdaCargaInit();
     controlSensoresInit();
     alarmasInit();
+    pidControllerInit();
 //    userInterfaceInit();
     }
 
 void sistemaUpdate(){
     pcSerialComUpdate();
     controlSensoresUpdate();
+    pidControllerUpdate();
 //    userInterfaceUpdate();
     delay(TIEMPO_DE_INCREMENTO_MS);
     }

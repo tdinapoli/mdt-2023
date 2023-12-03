@@ -46,6 +46,30 @@ void motorBombaPotInit(){
     cs = 1;
 }
 
+int pctToDuty(float pct){
+    int dutyCycle;
+    if (0.0 <= pct && pct <= 100.0){
+        dutyCycle = (int) (pct*255/100);
+        return dutyCycle;
+    } else{ 
+        motor_bomba_pot_pc_serial.printf("El porcentaje de duty cycle debe esar entre 0 y 100.\n");
+        return -1;
+    }
+}
+
+void setPWM(float pwm){
+    cs = 0;
+    spi.write(0x11);
+    int newDutyCycle = pctToDuty(pwm);
+    if (chequearRestricciones(newDutyCycle)){
+        spi.write(newDutyCycle);
+        pwm_level = newDutyCycle;
+        motor_bomba_pot_pc_serial.printf("Duty Cycle: %.2f \n", readPotBombaDutyCycle());
+    } else {
+        motor_bomba_pot_pc_serial.printf("Valor del potenciometro para la bomba fuera de rango.\n");
+    }
+}
+
 void potBombaBajarPocoDutyCycle(){
     cs = 0;
     spi.write(0x11); // mado command byte 00 01 00 11
@@ -61,6 +85,7 @@ void potBombaBajarPocoDutyCycle(){
     }
     cs = 1;
 }
+
 
 void potBombaSubirPocoDutyCycle(){
     cs = 0;
@@ -110,6 +135,8 @@ void potBombaSubirMuchoDutyCycle(){
     cs = 1;
 }
 
+
+
 void setPotResistance(int level){
     cs = 0;
     spi.write(0x11);
@@ -122,6 +149,9 @@ float readPotBombaDutyCycle(){
     return percent;
 }
 
+
+
 static bool chequearRestricciones(int level){
     return (level < 255 && level > 0);
 }
+
